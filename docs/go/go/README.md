@@ -428,3 +428,182 @@ func main() {
     *str = "Go语言教程"
     fmt.Println(*str)
 ```
+
+## Go语言变量的生命周期
+变量的生命周期指的是在程序运行期间变量有效存在的时间间隔。  
+变量的生命周期与变量的作用域有着不可分割的联系：
+* 全局变量：它的生命周期和整个程序的运行周期是一致的；
+* 局部变量：它的生命周期则是动态的，从创建这个变量的声明语句开始，到这个变量不再被引用为止；
+* 形式参数和函数返回值：它们都属于局部变量，在函数被调用的时候创建，函数调用结束后被销毁。
+
+## Go语言常量和const关键字
+Go语言中的常量使用关键字 const 定义，用于存储不会改变的数据，常量是在编译时被创建的，即使定义在函数内部也是如此，并且只能是布尔型、数字型（整数型、浮点型和复数）和字符串型。由于编译时的限制，定义常量的表达式必须为能被编译器求值的常量表达式。  
+常量的定义格式和变量的声明语法类似：const name [type] = value，例如：
+```go
+const pi = 3.14159 // 相当于 math.Pi 的近似值
+```
+
+在Go语言中，你可以省略类型说明符 [type]，因为编译器可以根据变量的值来推断其类型。
+* 显式类型定义： const b string = "abc"
+* 隐式类型定义： const b = "abc"
+
+常量的值必须是能够在编译时就能够确定的，可以在其赋值表达式中涉及计算过程，但是所有用于计算的值必须在编译期间就能获得。 
+* 正确的做法：const c1 = 2/3
+* 错误的做法：const c2 = getNumber() // 引发构建错误: getNumber() 用做值
+
+和变量声明一样，可以批量声明多个常量：
+```go
+    const (
+        e  = 2.7182818
+        pi = 3.1415926
+    )
+```
+如果是批量声明的常量，除了第一个外其它的常量右边的初始化表达式都可以省略，如果省略初始化表达式则表示使用前面常量的初始化表达式，对应的常量类型也是一样的。例如：
+```go
+    const (
+        a = 1
+        b
+        c = 2
+        d
+    )
+    fmt.Println(a, b, c, d) // "1 1 2 2"
+```
+### iota 常量生成器
+常量声明可以使用 iota 常量生成器初始化，它用于生成一组以相似规则初始化的常量，但是不用每行都写一遍初始化表达式。在一个 const 声明语句中，在第一个声明的常量所在的行，iota 将会被置为 0，然后在每一个有常量声明的行加一。
+```go
+    type Weekday int
+    const (
+        Sunday Weekday = iota
+        Monday
+        Tuesday
+        Wednesday
+        Thursday
+        Friday
+        Saturday
+    )
+```
+周日将对应 0，周一为 1，以此类推。
+
+### 无类型常量
+Go语言的常量有个不同寻常之处。虽然一个常量可以有任意一个确定的基础类型，例如 int 或 float64，或者是类似 time.Duration 这样的基础类型，但是许多常量并没有一个明确的基础类型。
+
+编译器为这些没有明确的基础类型的数字常量提供比基础类型更高精度的算术运算，可以认为至少有 256bit 的运算精度。这里有六种未明确类型的常量类型，分别是无类型的布尔型、无类型的整数、无类型的字符、无类型的浮点数、无类型的复数、无类型的字符串。
+
+通过延迟明确常量的具体类型，不仅可以提供更高的运算精度，而且可以直接用于更多的表达式而不需要显式的类型转换。
+math.Pi 无类型的浮点数常量，可以直接用于任意需要浮点数或复数的地方：
+```go
+    var x float32 = math.Pi
+    var y float64 = math.Pi
+    var z complex128 = math.Pi
+```
+
+## Golang模拟枚举
+Go语言现阶段没有枚举类型，但是可以使用 const 常量配合上一节《Go语言常量》中介绍的 iota 来模拟枚举类型，请看下面的代码：
+```go
+type Weapon int
+const (
+     Arrow Weapon = iota    // 开始生成枚举值, 默认为0
+     Shuriken
+     SniperRifle
+     Rifle
+     Blower
+)
+// 输出所有枚举值
+fmt.Println(Arrow, Shuriken, SniperRifle, Rifle, Blower)
+// 使用枚举类型并赋初值
+var weapon Weapon = Blower
+fmt.Println(weapon)
+```
+
+## Go语言type关键字
+区分类型别名与类型定义
+定义类型别名的写法为：
+```go
+type TypeAlias = Type
+```
+类型别名规定：TypeAlias 只是 Type 的别名，本质上 TypeAlias 与 Type 是同一个类型，就像一个孩子小时候有小名、乳名，上学后用学名，英语老师又会给他起英文名，但这些名字都指的是他本人。
+
+类型别名与类型定义表面上看只有一个等号的差异，那么它们之间实际的区别有哪些呢？下面通过一段代码来理解。
+```go
+package main
+import (
+    "fmt"
+)
+// 将NewInt定义为int类型
+type NewInt int
+// 将int取一个别名叫IntAlias
+type IntAlias = int
+func main() {
+    // 将a声明为NewInt类型
+    var a NewInt
+    // 查看a的类型名
+    fmt.Printf("a type: %T\n", a)
+    // 将a2声明为IntAlias类型
+    var a2 IntAlias
+    // 查看a2的类型名
+    fmt.Printf("a2 type: %T\n", a2)
+}
+```
+代码运行结果：
+```
+a type: main.NewInt  
+a2 type: int
+```
+### 非本地类型不能定义方法
+能够随意地为各种类型起名字，是否意味着可以在自己包里为这些类型任意添加方法呢？参见下面的代码演示：
+```go
+package main
+import (
+    "time"
+)
+// 定义time.Duration的别名为MyDuration
+type MyDuration = time.Duration
+// 为MyDuration添加一个函数
+func (m MyDuration) EasySet(a string) {
+}
+func main() {
+}
+```
+编译上面代码报错，信息如下： cannot define new methods on non-local type time.Duration  
+编译器提示：不能在一个非本地的类型 time.Duration 上定义新方法，非本地类型指的就是 time.Duration 不是在 main 包中定义的，而是在 time 包中定义的，与 main 包不在同一个包中，因此不能为不在一个包中的类型定义方法。  
+解决这个问题有下面两种方法：
+* 将第 8 行修改为 type MyDuration time.Duration，也就是将 MyDuration 从别名改为类型；
+* 将 MyDuration 的别名定义放在 time 包中。
+
+## Go语言注释的定义及使用
+* 单行注释简称行注释，是最常见的注释形式，可以在任何地方使用以//开头的单行注释；
+* 多行注释简称块注释，以/*开头，并以*/结尾，且不可以嵌套使用，多行注释一般用于包的文档描述或注释成块的代码片段。
+
+## Go语言关键字与标识符简述
+Go语言的词法元素包括 5 种，分别是标识符（identifier）、关键字（keyword）、操作符（operator）、分隔符（delimiter）、字面量（literal），它们是组成Go语言代码和程序的最基本单位。
+### 关键字
+关键字即是被Go语言赋予了特殊含义的单词，也可以称为保留字。
+Go语言中的关键字一共有 25 个：
+|           |             |          |              |           |
+|------|----|----|----|----|
+|   break   |   default   |   func   |   interface  |  select   |
+|   case   |   defer   |   go   |   map  |  struct   |
+|   chan   |   else   |   goto   |   package  |  switch   |
+|   const   |   fallthrough   |   if   |   range  |  type   |
+|   continue   |   for   |   import   |   return  |  var   |
+
+### 标识符
+标识符是指Go语言对各种变量、方法、函数等命名时使用的字符序列，标识符由若干个字母、下划线_、和数字组成，且第一个字符必须是字母。通俗的讲就是凡可以自己定义的名称都可以叫做标识符。  
+ 标识符的命名需要遵守以下规则：
+
+* 由 26 个英文字母、0~9、_组成；
+* 不能以数字开头，例如 var 1num int 是错误的；
+* Go语言中严格区分大小写；
+* 标识符不能包含空格；
+* 不能以系统保留关键字作为标识符，比如 break，if 等等。
+命名标识符时还需要注意以下几点：
+* 标识符的命名要尽量采取简短且有意义；
+* 不能和标准库中的包名重复；
+* 为变量、函数、常量命名时采用驼峰命名法，例如 stuName、getVal；
+
+在Go语言中还存在着一些特殊的标识符，叫做预定义标识符，
+
+append	bool	byte	cap	close	complex	complex64	complex128	uint16  
+copy	false	float32	float64	imag	int	int8	int16	uint32  
+int32	int64	iota	len	make	new	nil	panic	uint64  
+print	println	real	recover	string	true	uint	uint8	uintptr  
