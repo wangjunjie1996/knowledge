@@ -3,7 +3,7 @@
 [VuePress 官网](https://www.vuepress.cn/guide/)
 
 ::: tip
-各种技术知识总结文档
+各种技术知识学习笔记或总结文档
 :::
 
 1. clone 后需要做以下操作启动 VuePress
