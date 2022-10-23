@@ -21,7 +21,8 @@ module.exports = {
         title: 'GO 知识',
         link: '/go/',
         children: [
-          '/go/go/'
+          '/go/go/',
+          '/go/go/go1'
         ],
       }
     ],
