@@ -153,3 +153,34 @@ fmt.Println(len(a), len(b))
 [0 0] [0 0]  
 2 2
 ```
+## Go语言append()为切片添加元素
+var a []int
+a = append(a, 1) // 追加1个元素
+a = append(a, 1, 2, 3) // 追加多个元素, 手写解包方式
+a = append(a, []int{1,2,3}...) // 追加一个切片, 切片需要解包
+不过需要注意的是，在使用 append() 函数为切片动态添加元素时，如果空间不足以容纳足够多的元素，切片就会进行“扩容”，此时新切片的长度会发生改变。  
+切片在扩容时，容量的扩展规律是按容量的 2 倍数进行扩充，例如 1、2、4、8、16……，代码如下：
+```go
+var numbers []int
+for i := 0; i < 10; i++ {
+    numbers = append(numbers, i)
+    fmt.Printf("len: %d  cap: %d pointer: %p\n", len(numbers), cap(numbers), numbers)
+}
+代码输出如下：
+```go
+len: 1  cap: 1 pointer: 0xc0420080e8  
+len: 2  cap: 2 pointer: 0xc042008150  
+len: 3  cap: 4 pointer: 0xc04200e320  
+len: 4  cap: 4 pointer: 0xc04200e320  
+len: 5  cap: 8 pointer: 0xc04200c200  
+len: 6  cap: 8 pointer: 0xc04200c200  
+len: 7  cap: 8 pointer: 0xc04200c200  
+len: 8  cap: 8 pointer: 0xc04200c200  
+len: 9  cap: 16 pointer: 0xc042074000  
+len: 10  cap: 16 pointer: 0xc042074000
+```
+```go
+var a []int
+a = append(a[:i], append([]int{x}, a[i:]...)...) // 在第i个位置插入x
+a = append(a[:i], append([]int{1,2,3}, a[i:]...)...) // 在第i个位置插入切片
+```
