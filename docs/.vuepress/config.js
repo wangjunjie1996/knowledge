@@ -22,7 +22,8 @@ module.exports = {
         link: '/go/',
         children: [
           '/go/go/',
-          '/go/go/go1'
+          '/go/go/GO语言容器',
+          '/go/go/Go语言流程控制'
         ],
       }
     ],
