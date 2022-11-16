@@ -83,3 +83,144 @@ val 始终为集合中对应索引的值拷贝，因此它一般只具有只读�
 * 数组、切片、字符串返回索引和值。
 * map 返回键和值。
 * 通道（channel）只返回通道内的值。
+
+## Go语言switch语句
+
+Go语言的 switch 要比C语言的更加通用，表达式不需要为常量，甚至不需要为整数，case 按照从上到下的顺序进行求值，直到找到匹配的项，如果 switch 没有表达式，则对 true 进行匹配，因此，可以将 if else-if else 改写成一个 switch。
+相对于C语言和Java等其它语言来说，Go语言中的 switch 结构使用上更加灵活，语法设计尽量以使用方便为主。
+Go语言改进了 switch 的语法设计，case 与 case 之间是独立的代码块，不需要通过 break 语句跳出当前 case 代码块以避免执行到下一行，
+```go
+var a = "hello"
+switch a {
+case "hello":
+    fmt.Println(1)
+case "world":
+    fmt.Println(2)
+default:
+    fmt.Println(0)
+}
+```
+1) 一分支多值
+```go
+var a = "mum"
+switch a {
+case "mum", "daddy":
+    fmt.Println("family")
+}
+```
+2) 分支表达式
+case 后不仅仅只是常量，还可以和 if 一样添加表达式，代码如下：
+```go
+var r int = 11
+switch {
+case r > 10 && r < 20:
+    fmt.Println(r)
+}
+```
+## Go语言goto语句
+Go语言中 goto 语句通过标签进行代码间的无条件跳转，同时 goto 语句在快速跳出循环、避免重复退出上也有一定的帮助，使用 goto 语句能简化一些代码的实现过程。
+### 使用 goto 退出多层循环
+```go
+package main
+
+import "fmt"
+
+func main() {
+    for x := 0; x < 10; x++ {
+
+        for y := 0; y < 10; y++ {
+
+            if y == 2 {
+                // 跳转到标签
+                goto breakHere
+            }
+
+        }
+    }
+    // 手动返回, 避免执行进入标签
+    return
+    // 标签
+    breakHere:
+        fmt.Println("done")
+}
+```
+### 使用 goto 集中处理错误
+多处错误处理存在代码重复时是非常棘手的，例如：
+```go
+err := firstCheckError()
+if err != nil {
+    fmt.Println(err)
+    exitProcess()
+    return
+}
+err = secondCheckError()
+if err != nil {
+    fmt.Println(err)
+    exitProcess()
+    return
+}
+fmt.Println("done")
+```
+使用 goto 语句来实现同样的逻辑：
+```go
+    err := firstCheckError()
+    if err != nil {
+        goto onExit
+    }
+    err = secondCheckError()
+    if err != nil {
+        goto onExit
+    }
+    fmt.Println("done")
+    return
+onExit:
+    fmt.Println(err)
+    exitProcess()
+```
+## Go语言break
+Go语言中 break 语句可以结束 for、switch 和 select 的代码块，另外 break 语句还可以在语句后面添加标签，表示退出某个标签对应的代码块，标签要求必须定义在对应的 for、switch 和 select 的代码块上。
+跳出指定循环：
+```go
+package main
+import "fmt"
+func main() {
+OuterLoop:
+    for i := 0; i < 2; i++ {
+        for j := 0; j < 5; j++ {
+            switch j {
+            case 2:
+                fmt.Println(i, j)
+                break OuterLoop
+            case 3:
+                fmt.Println(i, j)
+                break OuterLoop
+            }
+        }
+    }
+}
+// 输出 0 2
+```
+## Go语言continue
+Go语言中 continue 语句可以结束当前循环，开始下一次的循环迭代过程，仅限在 for 循环内使用，在 continue 语句后添加标签时，表示开始标签对应的循环，例如：
+```go
+package main
+import "fmt"
+func main() {
+OuterLoop:
+    for i := 0; i < 2; i++ {
+
+        for j := 0; j < 5; j++ {
+            switch j {
+            case 2:
+                fmt.Println(i, j)
+                continue OuterLoop
+            }
+        }
+    }
+}
+```
+代码输出结果如下：
+```
+0 2
+1 2
+```
