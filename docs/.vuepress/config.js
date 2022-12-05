@@ -23,7 +23,8 @@ module.exports = {
         children: [
           '/go/go/',
           '/go/go/GO语言容器',
-          '/go/go/Go语言流程控制'
+          '/go/go/Go语言流程控制',
+          '/go/go/Go语言函数'
         ],
       }
     ],
