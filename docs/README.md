@@ -3,20 +3,30 @@
 [VuePress 官网](https://www.vuepress.cn/guide/)
 
 ::: tip
-各种技术知识学习笔记或总结文档
+本人各种技术知识学习,整理,归纳,笔记,总结文档  
+包括以下:  
+学校学过的知识[c, c++, 原生java, java web(ssm), 原生php, mysql数据库, oracle数据库, html, css, javascript]的笔记，更高级的知识点  
+自学知识[go语言相关，vue，小程序, mongodb 数据库, thinkphp 框架， php yii2框架 ]
 :::
 
-1. clone 后需要做以下操作启动 VuePress
+1. [Gitee](https://gitee.com/wangjunjie2018/knowledge)clone 后需要做以下操作启动 VuePress
+
 * 将 VuePress 安装为本地依赖
+
   ```
   yarn add -D vuepress
   ```
+
 * 在本地启动服务器
+
   ```
   yarn docs:dev
   ```
+
 ## 目录结构
+
 * uePress 遵循 “约定优于配置” 的原则，推荐的目录结构如下：
+
 ```
 .
 ├── docs
@@ -33,12 +43,12 @@
 │   │   │   └── ssr.html
 │   │   ├── config.js (可选的)
 │   │   └── enhanceApp.js (可选的)
-│   │ 
+│   │
 │   ├── README.md
 │   ├── guide
 │   │   └── README.md
 │   └── config.md
-│ 
+│
 └── package.json
 ```
 
