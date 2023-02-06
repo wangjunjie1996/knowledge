@@ -6,10 +6,10 @@
 本人各种技术知识学习,整理,归纳,笔记,总结文档  
 包括以下:  
 学校学过的知识[c, c++, 原生java, java web(ssm), 原生php, mysql数据库, oracle数据库, html, css, javascript]的笔记，更高级的知识点  
-自学知识[go语言相关，vue，小程序, mongodb 数据库, thinkphp 框架， php yii2框架 ]
+自学知识[go语言相关，vue，小程序, mongodb 数据库, thinkphp 框架， php yii2框架, 树莓派, postgreSQL数据库.....等 ]
 :::
 
-1. [Gitee](https://gitee.com/wangjunjie2018/knowledge)clone 后需要做以下操作启动 VuePress
+1. [GitHub](https://github.com/wangjunjie1996/knowledge)clone 后需要做以下操作启动 VuePress
 
 * 将 VuePress 安装为本地依赖
 
